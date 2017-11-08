@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"sourceMap": true,
+		"module": "es6",
+		"target": "es5",
+		"moduleResolution": "node",
+		"jsx": "react", 
+		"baseUrl": "./src/",
+		"paths": {
+			"*": [ "*" ]
+		}
+	},
+	"include": [
+		"./src/entries/**/*",
+		"./src/declarations/*"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Component preview</title>
+	</head>
+	<body>
+		<div class="page_content"></div>
+		<script>
+			window.__language__ = "rus";
+		</script>
+		<script>
+			function getQueryParams(qs) {
+				qs = qs.split('+').join(' ');
+
+				var params = {},
+					tokens,
+					re = /[?&]?([^=]+)=([^&]*)/g;
+
+				while (tokens = re.exec(qs)) {
+					params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+				}
+
+				return params;
+			}
+
+			function loadJSON(filePath) {
+				// Load json file;
+				var json = loadTextFileAjaxSync(filePath, "application/json");
+				// Parse json
+				return JSON.parse(json);
+			}
+
+			// Load text with Ajax synchronously: takes path to file and optional MIME type
+			function loadTextFileAjaxSync(filePath, mimeType)
+			{
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.open("GET",filePath,false);
+				if (mimeType != null) {
+					if (xmlhttp.overrideMimeType) {
+						xmlhttp.overrideMimeType(mimeType);
+					}
+				}
+				xmlhttp.send();
+				if (xmlhttp.status==200)
+				{
+					return xmlhttp.responseText;
+				}
+				else {
+					// TODO Throw exception
+					return null;
+				}
+			}
+		</script>
+		<script>
+			var query = getQueryParams(document.location.search);
+
+			if (query.lang == "eng") {
+				window.LOCALE = "eng";
+				window.NLOCALE = "en";
+			} else {
+				window.LOCALE = "rus";
+				window.NLOCALE = "ru";
+			}
+
+			if (query.script) {
+				eval(loadTextFileAjaxSync(query.script, 'text/javascript'));
+			}
+
+			if (query.params) {
+				window.params = loadJSON(query.params);
+			}
+
+			if (query.labels) {
+				window.langLabels = loadJSON(query.labels);
+			}
+
+		</script>
+		<script src="/static/manifest.js"></script>
+		<script src="/static/vendors.js"></script>
+		<script src="/static/preview.eng.js"></script>
+		<script src="/static/preview.rus.js"></script>
+		<script src="/static/preview.js"></script>
+	</body>
+</html>
