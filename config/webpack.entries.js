@@ -181,7 +181,10 @@ function createCommonEntry(name, entryPath, noEmitFiles, publicPath) {
 			]
 		},
 		plugins: [
-			new webpack.DefinePlugin({NODE_ENV: JSON.stringify(NODE_ENV)}),
+			new webpack.DefinePlugin({
+				NODE_ENV: JSON.stringify(NODE_ENV),
+				'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
+			}),
 			new webpack.NamedModulesPlugin()
 		],
 		devtool: 'module-source-map'
