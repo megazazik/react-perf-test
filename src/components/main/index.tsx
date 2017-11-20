@@ -19,6 +19,7 @@ interface IState {
 	type: ComponentType;
 	maxLength: number;
 	useSplitting: boolean;
+	lastRenderTime: number;
 }
 
 export default class PerformanceTesting extends React.Component<{}, IState> {
@@ -27,7 +28,8 @@ export default class PerformanceTesting extends React.Component<{}, IState> {
 		optimized: false,
 		type: ComponentType.PureStatefull,
 		maxLength: 10,
-		useSplitting: false
+		useSplitting: false,
+		lastRenderTime: 0
 	}
 
 	private _components = {
@@ -55,6 +57,10 @@ export default class PerformanceTesting extends React.Component<{}, IState> {
 
 	private _useSplittingChanged = (ev: React.SyntheticEvent<HTMLInputElement>) => {
 		this.setState({useSplitting: ev.currentTarget.checked});
+	}
+
+	private _onRender = (time: number) => {
+		this.setState({lastRenderTime: time});
 	}
 	
 	render() {
@@ -103,12 +109,14 @@ export default class PerformanceTesting extends React.Component<{}, IState> {
 						</tr>
 					</tbody>
 				</table>
+				<div><h2>Last rendering time: {this.state.lastRenderTime} ms</h2></div>
 				<Runner 
 					count={this.state.count}
 					optimized={this.state.optimized}
 					getElement={this._components[this.state.type]}
 					maxLength={this.state.maxLength}
 					useSplitting={this.state.useSplitting}
+					onRender={this._onRender}
 				/>
 			</div>
 		);

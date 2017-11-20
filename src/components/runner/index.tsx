@@ -10,6 +10,7 @@ export interface IProps {
 	count: number;
 	maxLength: number;
 	useSplitting?: boolean;
+	onRender(time: number): void;
 }
 
 interface IState {
@@ -18,7 +19,7 @@ interface IState {
 	values: number[];
 }
 
-export default class TestsRunner extends React.Component<IProps, IState> {
+export default class TestsRunner extends React.PureComponent<IProps, IState> {
 	public state: IState = this._createState(this.props.count);
 
 	private _createState(count: number) {
@@ -96,6 +97,7 @@ export default class TestsRunner extends React.Component<IProps, IState> {
 		performance.measure('rendering', 'rendering-start', 'rendering-stop');
 		const measure = performance.getEntriesByName('rendering')[0];
 		console.log(`Rendering time: ${measure.duration} ms`);
+		this.props.onRender(measure.duration);
 		performance.clearMarks();
 		performance.clearMeasures();
 		performance.clearResourceTimings();

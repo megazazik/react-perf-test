@@ -201,8 +201,9 @@ var PerformanceTesting = (function (_super) {
             count: 1000,
             optimized: false,
             type: ComponentType.PureStatefull,
-            maxLength: 1000,
-            useSplitting: false
+            maxLength: 10,
+            useSplitting: false,
+            lastRenderTime: 0
         };
         _this._components = (_a = {},
             _a[ComponentType.PureStatefull] = function (props) { return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_4__stubs_pureStatefull__["a" /* default */], __assign({ key: props.value }, props)); },
@@ -224,6 +225,9 @@ var PerformanceTesting = (function (_super) {
         };
         _this._useSplittingChanged = function (ev) {
             _this.setState({ useSplitting: ev.currentTarget.checked });
+        };
+        _this._onRender = function (time) {
+            _this.setState({ lastRenderTime: time });
         };
         return _this;
         var _a;
@@ -258,7 +262,12 @@ var PerformanceTesting = (function (_super) {
                                 __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("br", null),
                                 __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("input", { type: "text", value: this.state.maxLength, onChange: this._maxLengthChanged })
                             ])))),
-            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__runner__["a" /* default */], { count: this.state.count, optimized: this.state.optimized, getElement: this._components[this.state.type], maxLength: this.state.maxLength, useSplitting: this.state.useSplitting })));
+            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
+                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("h2", null,
+                    "Last rendering time: ",
+                    this.state.lastRenderTime,
+                    " ms")),
+            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__runner__["a" /* default */], { count: this.state.count, optimized: this.state.optimized, getElement: this._components[this.state.type], maxLength: this.state.maxLength, useSplitting: this.state.useSplitting, onRender: this._onRender })));
     };
     return PerformanceTesting;
 }(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]));
@@ -343,7 +352,7 @@ if(false) {
 
 
 function getSmallMarkup(props) {
-    return (__WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { key: props.value, onMouseEnter: props.onSelect, onMouseLeave: props.onDeselect, className: __WEBPACK_IMPORTED_MODULE_1__small_less___default.a.element + (props.selected ? ' ' + __WEBPACK_IMPORTED_MODULE_1__small_less___default.a.selected : '') },
+    return (__WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { key: props.value, onMouseEnter: props.onSelect, onMouseLeave: props.onDeselect, className: __WEBPACK_IMPORTED_MODULE_1__small_less___default.a.element + (props.selected ? ' ' + __WEBPACK_IMPORTED_MODULE_1__small_less___default.a.selected : ''), onClick: props.selected ? props.onDeselect : props.onSelect },
         __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("span", null, props.value)));
 }
 ;
@@ -452,6 +461,7 @@ var TestsRunner = (function (_super) {
         performance.measure('rendering', 'rendering-start', 'rendering-stop');
         var measure = performance.getEntriesByName('rendering')[0];
         console.log("Rendering time: " + measure.duration + " ms");
+        this.props.onRender(measure.duration);
         performance.clearMarks();
         performance.clearMeasures();
         performance.clearResourceTimings();
@@ -464,7 +474,7 @@ var TestsRunner = (function (_super) {
             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: __WEBPACK_IMPORTED_MODULE_1__styles_less___default.a.elements }, this.props.useSplitting ? (__WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_3__list2__["a" /* default */], { values: this.state.values.map(this._getProps), getComponent: this.props.getElement, maxLength: this.props.maxLength })) : (this.state.values.map(function (i) { return _this.props.getElement(_this._getProps(i)); })))));
     };
     return TestsRunner;
-}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]));
+}(__WEBPACK_IMPORTED_MODULE_0_react__["PureComponent"]));
 /* harmony default export */ __webpack_exports__["a"] = (TestsRunner);
 
 
