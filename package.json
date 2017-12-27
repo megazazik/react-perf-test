@@ -8,8 +8,8 @@
     "express": "^4.15.5",
     "minimist": "^1.2.0",
     "node-static": "^0.7.9",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "@types/express": "^4.0.37",

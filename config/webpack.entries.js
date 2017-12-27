@@ -93,7 +93,7 @@ function createCommonEntry(name, entryPath, noEmitFiles, publicPath) {
 		localIdentName: '[path][name]__[local]'
 	}
 
-	return {
+	const config = {
 		context: path.resolve(__dirname, '../src'),
 		entry: entry,
 		output: {
@@ -189,4 +189,10 @@ function createCommonEntry(name, entryPath, noEmitFiles, publicPath) {
 		],
 		devtool: 'module-source-map'
 	};
+
+	if (NODE_ENV === 'production') {
+		config.plugins.push(new webpack.optimize.UglifyJsPlugin())
+	}
+
+	return config;
 }

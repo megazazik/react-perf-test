@@ -10,7 +10,7 @@ enum ComponentType {
 	PureStatefull = 'pureStatefull',
 	Statefull = 'statefull',
 	Stateless = 'stateless',
-	Native = 'native'
+	Native = 'html'
 }
 
 interface IState {
@@ -20,6 +20,8 @@ interface IState {
 	maxLength: number;
 	useSplitting: boolean;
 	lastRenderTime: number;
+	allRenderTime: number;
+	renderCount: number;
 }
 
 export default class PerformanceTesting extends React.Component<{}, IState> {
@@ -29,7 +31,9 @@ export default class PerformanceTesting extends React.Component<{}, IState> {
 		type: ComponentType.PureStatefull,
 		maxLength: 10,
 		useSplitting: false,
-		lastRenderTime: 0
+		lastRenderTime: 0,
+		allRenderTime: 0,
+		renderCount: -1
 	}
 
 	private _components = {
@@ -40,63 +44,96 @@ export default class PerformanceTesting extends React.Component<{}, IState> {
 	};
 
 	private _optimizedChanged = (ev: React.SyntheticEvent<HTMLInputElement>) => {
-		this.setState({optimized: ev.currentTarget.checked})
+		this.setState({
+			optimized: ev.currentTarget.checked,
+			allRenderTime: 0,
+			renderCount: -1
+		})
 	}
 
 	private _countChanged = (ev: React.SyntheticEvent<HTMLInputElement>) => {
-		this.setState({count: +ev.currentTarget.value});
+		this.setState({
+			count: +ev.currentTarget.value,
+			allRenderTime: 0,
+			renderCount: -1
+		});
 	}
 
 	private _typeChanged = (ev: React.SyntheticEvent<HTMLInputElement>) => {
-		this.setState({type: ev.currentTarget.value as any});
+		this.setState({
+			type: ev.currentTarget.value as any,
+			allRenderTime: 0,
+			renderCount: -1
+		});
 	}
 
 	private _maxLengthChanged = (ev: React.SyntheticEvent<HTMLInputElement>) => {
-		this.setState({maxLength: +ev.currentTarget.value});
+		this.setState({
+			maxLength: +ev.currentTarget.value,
+			allRenderTime: 0,
+			renderCount: -1
+		});
 	}
 
 	private _useSplittingChanged = (ev: React.SyntheticEvent<HTMLInputElement>) => {
-		this.setState({useSplitting: ev.currentTarget.checked});
+		this.setState({
+			useSplitting: ev.currentTarget.checked,
+			allRenderTime: 0,
+			renderCount: -1
+		});
+	}
+
+	private _resetCount = () => {
+		this.setState({
+			allRenderTime: 0,
+			renderCount: -1
+		});
 	}
 
 	private _onRender = (time: number) => {
-		this.setState({lastRenderTime: time});
+		this.setState((prevState) => ({
+			lastRenderTime: time,
+			renderCount: prevState.renderCount + 1,
+			allRenderTime: prevState.renderCount >= 0 ? prevState.allRenderTime + time : 0
+		}));
 	}
 	
 	render() {
 		return (
 			<div className={styles.container}>
-				<table className={styles.params}>
-					<thead>
-						<tr>
-							<th>Компонент</th>
-							<th>Оптимизация</th>
-							<th>Количество</th>
-							<th>Разбиение списка</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								{Object.keys(ComponentType).map((type) => (
-									<div key={type}>
-										<label>
-											{type}
-											<input type="radio" value={ComponentType[type]} checked={this.state.type === ComponentType[type]} onChange={this._typeChanged}/>
-										</label>
-									</div>
-								))}
-							</td>
-							<td>
-								<label>
-									Включена
-									<input type="checkbox" checked={this.state.optimized} onChange={this._optimizedChanged}/>
-								</label>
-							</td>
-							<td>
+				<div className={styles.params}>
+					<div className={styles.param}>
+						<div className={styles.paramTitle}>Компонент</div>
+						<div className={styles.paramField}>
+							{Object.keys(ComponentType).map((type) => (
+								<div key={type}>
+									<label>
+										{type}
+										<input type="radio" value={ComponentType[type]} checked={this.state.type === ComponentType[type]} onChange={this._typeChanged}/>
+									</label>
+								</div>
+							))}
+						</div>
+					</div>
+					<div className={styles.param}>
+						<div className={styles.paramTitle}>Оптимизация</div>
+						<div className={styles.paramField}>
+							<label>
+								Включена
+								<input type="checkbox" checked={this.state.optimized} onChange={this._optimizedChanged}/>
+							</label>
+						</div>
+					</div>
+					<div className={styles.paramGroup}>
+						<div className={styles.param}>
+							<div className={styles.paramTitle}>Количество компонентов</div>
+							<div className={styles.paramField}>
 								<input type="text" value={this.state.count} onChange={this._countChanged}/>
-							</td>
-							<td>
+							</div>
+						</div>
+						<div className={styles.param}>
+							<div className={styles.paramTitle}>Разбиение списка</div>
+							<div className={styles.paramField}>
 								<label>
 									Включено
 									<input type="checkbox" checked={this.state.useSplitting} onChange={this._useSplittingChanged}/>
@@ -105,11 +142,16 @@ export default class PerformanceTesting extends React.Component<{}, IState> {
 									<br/>,
 									<input type="text" value={this.state.maxLength} onChange={this._maxLengthChanged}/>
 								]}
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<div><h2>Last rendering time: {this.state.lastRenderTime} ms</h2></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div><h2>Время последнего обновления: {this.state.lastRenderTime} мс</h2></div>
+				<div><h2>Среднее время обновления: {
+					this.state.renderCount > 0 ? 
+						this.state.allRenderTime / this.state.renderCount :
+						'---'
+				} мс <button onClick={this._resetCount}>Сбросить</button></h2></div>
 				<Runner 
 					count={this.state.count}
 					optimized={this.state.optimized}

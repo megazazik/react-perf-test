@@ -32,18 +32,29 @@ export default class List extends React.Component<IProps> {
 
 	render() {
 		if (this.props.values.length > this.props.maxLength) {
-			const childProps: any[][] = [];
-			const itemCount = Math.floor(this.props.values.length / this.props.maxLength);
-			for (let i = 0; i < this.props.values.length; i += itemCount) {
-				childProps.push(this.props.values.slice(i, i + itemCount));
+			let innerArrayLength = this.props.maxLength;
+			while(this.props.values.length > innerArrayLength*this.props.maxLength) {
+				innerArrayLength *= this.props.maxLength;
 			}
+			const childComponents: JSX.Element[] = [];
 			const {children, ...propsNoChildren} = this.props;
+			for (let i = 0; i < this.props.values.length; i += innerArrayLength) {
+				childComponents.push(
+					<List
+						key={`optChild${i}`}
+						{...propsNoChildren}
+						values={this.props.values.slice(i, i + innerArrayLength)}
+
+					/>
+				);
+			}
+
+			/** @todo удалить div */
 			return (
-				<div>
-					{childProps.map( (childProp, index) => React.createElement(List, {...propsNoChildren, values: childProp, key: `optChild${index}`}))}
-				</div>
+				<div>{childComponents}</div>
 			);
 		} else {
+			/** @todo удалить div */
 			return (
 				<div>
 					{this.props.values.map( (props, index) =>  this.props.getComponent({...props as any, key: `optChild${index}`}))}

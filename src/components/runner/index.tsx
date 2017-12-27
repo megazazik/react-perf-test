@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styles from './styles.less';
-import Perf from 'react-addons-perf';
 import { ITestProps } from '../interface';
-import List from '../list2';
+import List from '../list';
 
 export interface IProps {
 	getElement(props: ITestProps): JSX.Element;
@@ -14,7 +13,6 @@ export interface IProps {
 }
 
 interface IState {
-	processing: boolean;
 	selectedValues: boolean[];
 	values: number[];
 }
@@ -30,8 +28,6 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 		}
 	}
 
-	private _cachedOnChange = () => {};
-
 	private _onSelectCallbacks = [];
 	private _createOnSelect(value: number) {
 		return () => this.setState((prevState: IState) => {
@@ -41,8 +37,10 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 		})
 	}
 	private _getOnSelect(value: number) {
+		const newCallback = this._createOnSelect(value);
 		if (this._onSelectCallbacks[value] === undefined) {
-			this._onSelectCallbacks[value] = this._createOnSelect(value);
+			// this._onSelectCallbacks[value] = this._createOnSelect(value);
+			this._onSelectCallbacks[value] = newCallback;
 		}
 		return this._onSelectCallbacks[value];
 	}
@@ -56,8 +54,10 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 		});
 	}
 	private _getOnDeselect(value: number) {
+		const newCallback = this._createOnDeselect(value);
 		if (this._onDeselectCallbacks[value] === undefined) {
-			this._onDeselectCallbacks[value] = this._createOnDeselect(value);
+			// this._onDeselectCallbacks[value] = this._createOnDeselect(value);
+			this._onDeselectCallbacks[value] = newCallback;
 		}
 		return this._onDeselectCallbacks[value];
 	}
@@ -77,26 +77,14 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 		}
 	}
 
-	private _start = () => {
-		Perf.start();
-		this.setState({processing: true});
-	}
-
 	componentWillUpdate() {
 		performance.mark('rendering-start');
 	}
 
 	componentDidUpdate() {
-		if (this.state.processing) {
-			Perf.stop();
-			Perf.printInclusive();
-			Perf.printWasted();
-			this.setState({processing: false});
-		}
 		performance.mark('rendering-stop');
 		performance.measure('rendering', 'rendering-start', 'rendering-stop');
 		const measure = performance.getEntriesByName('rendering')[0];
-		console.log(`Rendering time: ${measure.duration} ms`);
 		this.props.onRender(measure.duration);
 		performance.clearMarks();
 		performance.clearMeasures();
@@ -106,9 +94,6 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 	render() {
 		return (
 			<div className={styles.container}>
-				<div className={styles.buttons}>
-					<button onClick={this._start}>Запуск</button>
-				</div>
 				<div className={styles.elements}>
 					{this.props.useSplitting ? (
 						<List
@@ -119,8 +104,6 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 					) : (
 						this.state.values.map((i) => this.props.getElement(this._getProps(i)))
 					)}
-					
-					
 				</div>
 			</div>
 		);
