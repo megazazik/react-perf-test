@@ -1,7 +1,7 @@
 {
   "name": "react-perf",
   "version": "0.0.1",
-  "description": "React performance testing.",
+  "description": "React performance testing",
   "main": "start.js",
   "dependencies": {
     "cross-env": "^5.1.1",
@@ -52,7 +52,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://megazazik@bitbucket.org/megazazik/react-perf.git"
+    "url": "https://github.com/megazazik/react-perf-test.git"
   },
   "author": "megazazik",
   "license": "MIT"
