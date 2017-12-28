@@ -49,16 +49,10 @@ export default class List extends React.Component<IProps> {
 				);
 			}
 
-			/** @todo удалить div */
-			return (
-				<div>{childComponents}</div>
-			);
+			return childComponents;
 		} else {
-			/** @todo удалить div */
-			return (
-				<div>
-					{this.props.values.map( (props, index) =>  this.props.getComponent({...props as any, key: `optChild${index}`}))}
-				</div>
+			return this.props.values.map(
+				(props, index) =>  this.props.getComponent({...props as any, key: `optChild${index}`})
 			);
 		}
 	}

@@ -147,11 +147,15 @@ export default class PerformanceTesting extends React.Component<{}, IState> {
 					</div>
 				</div>
 				<div><h2>Время последнего обновления: {this.state.lastRenderTime} мс</h2></div>
-				<div><h2>Среднее время обновления: {
-					this.state.renderCount > 0 ? 
-						this.state.allRenderTime / this.state.renderCount :
-						'---'
-				} мс <button onClick={this._resetCount}>Сбросить</button></h2></div>
+				<div>
+					<h2>Среднее время обновления: {
+						this.state.renderCount > 0 ? 
+							this.state.allRenderTime / this.state.renderCount :
+							'---'
+					} мс <button onClick={this._resetCount}>Сбросить</button></h2>
+					Для измерения времени обновления нужно водить мышкой по прмоугольникам внизу или нажимать на них (для телефонов)
+					<br/><br/>
+				</div>
 				<Runner 
 					count={this.state.count}
 					optimized={this.state.optimized}

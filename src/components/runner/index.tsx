@@ -39,7 +39,6 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 	private _getOnSelect(value: number) {
 		const newCallback = this._createOnSelect(value);
 		if (this._onSelectCallbacks[value] === undefined) {
-			// this._onSelectCallbacks[value] = this._createOnSelect(value);
 			this._onSelectCallbacks[value] = newCallback;
 		}
 		return this._onSelectCallbacks[value];
@@ -56,7 +55,6 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 	private _getOnDeselect(value: number) {
 		const newCallback = this._createOnDeselect(value);
 		if (this._onDeselectCallbacks[value] === undefined) {
-			// this._onDeselectCallbacks[value] = this._createOnDeselect(value);
 			this._onDeselectCallbacks[value] = newCallback;
 		}
 		return this._onDeselectCallbacks[value];
