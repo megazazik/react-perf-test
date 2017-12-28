@@ -99,7 +99,7 @@ function createCommonEntry(name, entryPath, noEmitFiles, publicPath) {
 		output: {
 			filename: '[name].js',
 			path: path.resolve(__dirname, '../bld/public'),
-			publicPath: (publicPath ? publicPath : "") + "/static/"
+			publicPath: (publicPath ? publicPath : "") + "/bld/public/"
 		},
 		resolve: {
 			extensions: [".js", ".jsx", ".ts", ".tsx"],

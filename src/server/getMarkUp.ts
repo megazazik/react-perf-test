@@ -15,9 +15,9 @@ export default (): string => {
 	</head>
 	<body>
 		<div id="content">${html}</div>
-		<script src="/static/manifest.js"></script>
-		<script src="/static/vendors.js"></script>
-		<script src="/static/bundle.js"></script>
+		<script src="/bld/public/manifest.js"></script>
+		<script src="/bld/public/vendors.js"></script>
+		<script src="/bld/public/bundle.js"></script>
 	</body>
 </html>`;
 };

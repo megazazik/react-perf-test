@@ -6,13 +6,13 @@ const chalk = require('chalk');
 
 try {
 	const config = require(path.resolve(argv.config));
-	config.output.publicPath = '/static/';
+	config.output.publicPath = '/bld/public/';
 	new WebpackDevServer(
 		webpack(config),
 		{
 			hot: true,
 			contentBase: path.resolve(__dirname, '.'),
-			publicPath: `/static/`,
+			publicPath: `/bld/public/`,
 			headers: {
 				"Access-Control-Allow-Origin": "*",
 				"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",

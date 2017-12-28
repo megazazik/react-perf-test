@@ -10,7 +10,7 @@ export default function startServer({port = 8080}: IParams = {}) {
 	const app = express();
 	
 	/** @todo разобраться с относительными путями */
-	app.use('/static', express.static(path.resolve(__dirname, '../public/')));
+	app.use('/bld/public', express.static(path.resolve(__dirname, '../public/')));
 
 	app.get('/', (req, res) => {
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
