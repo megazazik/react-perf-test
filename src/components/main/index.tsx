@@ -153,7 +153,7 @@ export default class PerformanceTesting extends React.Component<{}, IState> {
 							this.state.allRenderTime / this.state.renderCount :
 							'---'
 					} мс <button onClick={this._resetCount}>Сбросить</button></h2>
-					Для измерения времени обновления нужно водить мышкой по прмоугольникам внизу или нажимать на них (для телефонов)
+					Для измерения времени обновления нужно водить курсором мыши по прямоугольникам снизу или нажимать на них (для телефонов)
 					<br/><br/>
 				</div>
 				<Runner 

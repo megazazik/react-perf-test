@@ -7,9 +7,8 @@ export default function getSmallMarkup(props: ITestProps) {
 		<div
 			key={props.value}
 			onMouseEnter={props.onSelect}
-			onMouseLeave={props.onDeselect}
 			className={styles.element + (props.selected ? ' ' + styles.selected : '')}
-			onClick={props.selected ? props.onDeselect : props.onSelect}
+			onClick={props.onSelect}
 		>
 			<span>{props.value}</span>
 		</div>

@@ -13,7 +13,7 @@ export interface IProps {
 }
 
 interface IState {
-	selectedValues: boolean[];
+	selectedValue: number;
 	values: number[];
 }
 
@@ -24,17 +24,13 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 		return {
 			processing: false,
 			values: Array.apply(null, Array(count)).map((_, i) => i),
-			selectedValues: Array.apply(null, Array(count)).map((_) => false)
+			selectedValue: -1
 		}
 	}
 
 	private _onSelectCallbacks = [];
 	private _createOnSelect(value: number) {
-		return () => this.setState((prevState: IState) => {
-			const newValues = [...prevState.selectedValues];
-			newValues[value] = true;
-			return {selectedValues: newValues}
-		})
+		return () => this.setState({selectedValue: value})
 	}
 	private _getOnSelect(value: number) {
 		const newCallback = this._createOnSelect(value);
@@ -44,28 +40,11 @@ export default class TestsRunner extends React.PureComponent<IProps, IState> {
 		return this._onSelectCallbacks[value];
 	}
 
-	private _onDeselectCallbacks = [];
-	private _createOnDeselect(value: number) {
-		return () => this.setState((prevState: IState) => {
-			const newValues = [...prevState.selectedValues];
-			newValues[value] = false;
-			return {selectedValues: newValues}
-		});
-	}
-	private _getOnDeselect(value: number) {
-		const newCallback = this._createOnDeselect(value);
-		if (this._onDeselectCallbacks[value] === undefined) {
-			this._onDeselectCallbacks[value] = newCallback;
-		}
-		return this._onDeselectCallbacks[value];
-	}
-
 	private _getProps = (value: number): ITestProps => {
 		return {
 			value,
-			selected: this.state.selectedValues[value],
-			onSelect: this.props.optimized ? this._getOnSelect(value) : this._createOnSelect(value),
-			onDeselect: this.props.optimized ? this._getOnDeselect(value) : this._createOnDeselect(value)
+			selected: this.state.selectedValue === value,
+			onSelect: this.props.optimized ? this._getOnSelect(value) : this._createOnSelect(value)
 		}
 	}
 

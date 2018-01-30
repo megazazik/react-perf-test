@@ -3,6 +3,16 @@
   "version": "0.0.1",
   "description": "React performance testing",
   "main": "start.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node ./bld/server/index.js",
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev": "concurrently --kill-others \"npm run dev:server\" \"npm run build:server -- --watch\" \"nodemon --watch bld/server ./bld/server/index.js --port=8000\"",
+    "dev:client": "concurrently --kill-others \"npm run dev:server\" \"node ./bld/server/index.js --port=8000\"",
+    "dev:server": "webpack-dev-server --config=./config/webpack.dev.config --hot=true",
+    "build:server": "webpack --config=./config/webpack.server.config",
+    "preview": "node src/preview/start --config=./config/webpack.preview.config",
+    "static": "node src/staticServer/index"
+  },
   "dependencies": {
     "cross-env": "^5.1.1",
     "express": "^4.15.5",
@@ -39,16 +49,6 @@
     "webpack-dev-server": "^2.9.4",
     "webpack-node-externals": "^1.6.0",
     "webpack-split-by-path": "^2.0.0"
-  },
-  "scripts": {
-    "start": "cross-env NODE_ENV=production node ./bld/server/index.js",
-    "build": "cross-env NODE_ENV=production webpack",
-    "dev": "concurrently --kill-others \"npm run dev:server\" \"npm run build:server -- --watch\" \"nodemon --watch bld/server ./bld/server/index.js --port=8000\"",
-    "dev:client": "concurrently --kill-others \"npm run dev:server\" \"node ./bld/server/index.js --port=8000\"",
-    "dev:server": "webpack-dev-server --config=./config/webpack.dev.config --hot=true",
-    "build:server": "webpack --config=./config/webpack.server.config",
-    "preview": "node src/preview/start --config=./config/webpack.preview.config",
-    "static": "node src/staticServer/index"
   },
   "repository": {
     "type": "git",
